@@ -1,0 +1,68 @@
+# Etapa de despliegue reutilizable. Cada ambiente es un Environment de Azure DevOps,
+# donde se configuran aprobaciones (prod) y se registra el historial de despliegues.
+parameters:
+  - name: stageName
+    type: string
+  - name: displayName
+    type: string
+  - name: environment
+    type: string
+  - name: port
+    type: number
+  - name: dbPort
+    type: number
+  - name: passwordVariable
+    type: string
+  - name: dependsOn
+    type: string
+  - name: condition
+    type: string
+
+stages:
+  - stage: ${{ parameters.stageName }}
+    displayName: ${{ parameters.displayName }}
+    dependsOn: ${{ parameters.dependsOn }}
+    condition: ${{ parameters.condition }}
+    variables:
+      - group: incident-hub-secrets
+    jobs:
+      - deployment: Deploy
+        displayName: Desplegar en ${{ parameters.environment }}
+        environment: ${{ parameters.environment }}
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: incident-hub
+                  displayName: Descargar artefacto
+
+                - powershell: |
+                    $zip = Get-ChildItem "$(Pipeline.Workspace)\incident-hub\incident-hub-*.zip" | Select-Object -First 1
+                    if (-not $zip) { throw 'El artefacto no contiene el paquete incident-hub-<versión>.zip' }
+                    $releases = "C:\incident-hub-deploy\${{ parameters.environment }}\releases"
+                    $dir = Join-Path $releases "$(Build.BuildId)"
+                    if (Test-Path $dir) { Remove-Item $dir -Recurse -Force }
+                    Expand-Archive $zip.FullName -DestinationPath $dir
+                    Write-Host "Paquete $($zip.Name) expandido en $dir"
+                    Write-Host "##vso[task.setvariable variable=appDir]$dir"
+                  displayName: Expandir paquete
+
+                - powershell: |
+                    & "$(appDir)\devops\deploy.ps1" -Environment ${{ parameters.environment }} -Port ${{ parameters.port }} -DbPort ${{ parameters.dbPort }} -AppDir "$(appDir)"
+                    if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+                  displayName: Desplegar (BD, migraciones, aplicación)
+                  env:
+                    DB_PASSWORD: $(${{ parameters.passwordVariable }})
+
+                - powershell: |
+                    node "$(appDir)\tests\smoke\smoke.js" http://localhost:${{ parameters.port }}
+                    if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+                  displayName: Smoke test
+
+                - powershell: |
+                    $releases = "C:\incident-hub-deploy\${{ parameters.environment }}\releases"
+                    Get-ChildItem $releases -Directory | Sort-Object LastWriteTime -Descending | Select-Object -Skip 3 |
+                      ForEach-Object { Remove-Item $_.FullName -Recurse -Force -ErrorAction SilentlyContinue; Write-Host "Eliminado $($_.Name)" }
+                  displayName: Limpiar versiones antiguas (conserva 3)
+                  continueOnError: true
