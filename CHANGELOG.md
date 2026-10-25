@@ -2,6 +2,14 @@
 
 Todas las versiones siguen [Semantic Versioning](https://semver.org/lang/es/) y el formato de [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
+## [0.4.0] - 2026-10-25
+
+### Agregado
+- `GET /api/dashboard`: abiertos, cerrados, críticos y distribución por categoría y técnico (AB#27).
+- Interfaz web en React + Vite: dashboard, listado con filtros, formulario de alta y detalle con asignación, cambio de estado y bitácora (AB#28, AB#29, AB#30, AB#31).
+- El backend sirve `frontend/dist`, de modo que cada ambiente corre en un único proceso.
+- Pruebas del frontend con Vitest y Testing Library.
+
 ## [0.3.0] - 2026-10-24
 
 ### Agregado
