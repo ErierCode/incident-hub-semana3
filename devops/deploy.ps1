@@ -75,6 +75,9 @@ if (Test-Path $pidFile) {
     Write-Host "==> Deteniendo la versión anterior (PID $oldPid)"
     cmd.exe /c "taskkill /PID $oldPid /T /F >nul 2>&1"
     $global:LASTEXITCODE = 0
+    # Esperar a que el proceso y su consola desaparezcan antes de arrancar el nuevo.
+    Wait-Process -Id $oldPid -Timeout 15 -ErrorAction SilentlyContinue
+    Start-Sleep -Seconds 2
   }
 }
 
@@ -82,7 +85,12 @@ if (Test-Path $pidFile) {
 $node = (Get-Command node).Source
 $appLog = Join-Path $logDir 'app.log'
 $command = "cmd.exe /c `"cd /d `"$AppDir`" && `"$node`" --env-file=.env backend\src\server.js >> `"$appLog`" 2>&1`""
-$process = Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{ CommandLine = $command; CurrentDirectory = $AppDir }
+# CreateFlags = CREATE_NO_WINDOW (0x08000000) + CREATE_NEW_PROCESS_GROUP (0x200): sin ventana y en su propio grupo,
+# de modo que el Ctrl+C que se emite al cerrar la consola de la versión anterior no alcance al nuevo proceso.
+$startup = New-CimInstance -ClassName Win32_ProcessStartup -ClientOnly -Property @{ CreateFlags = [uint32]0x08000200; ShowWindow = [uint16]0 }
+$process = Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{
+  CommandLine = $command; CurrentDirectory = $AppDir; ProcessStartupInformation = $startup
+}
 if ($process.ReturnValue -ne 0) { throw "No se pudo iniciar la aplicación (código $($process.ReturnValue))" }
 $process.ProcessId | Set-Content $pidFile
 Write-Host "==> Aplicación iniciada (PID $($process.ProcessId)), log: $appLog"

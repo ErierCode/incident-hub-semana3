@@ -68,3 +68,42 @@ Secuencia completa: **build #11 fallido → diagnóstico → `fix/AB34-coverage-
 | Ubicación | `C:\agent`, modo interactivo (`run.cmd`) |
 | Registro | PAT con alcance *Agent Pools (Read & manage)* ingresado por consola; no se almacena en el repositorio |
 | Evidencia | Los builds #11 y #12 muestran `Agent: agente-pc-erick` y rutas `C:\agent\_work\1\s` en el log |
+
+## Segundo fallo controlado: redespliegue (semana 3)
+
+| Campo | Detalle |
+|---|---|
+| Pipeline | `incident-hub-semana3-ci` |
+| Ejecución fallida | [Build #36](https://dev.azure.com/epur/proyectoFinal/_build/results?buildId=36) (tag `v0.5.0`) |
+| Etapa y paso | `Deploy_DEV` → *Smoke test* |
+| Work item | Bug AB#46 |
+
+### Síntoma
+
+El paso *Desplegar* terminó bien (`OK: 'dev' sirve v0.5.0`), pero el siguiente paso falló 3 segundos después:
+
+```
+Smoke test contra http://localhost:3001 (esperado v0.5.0)
+  FAIL GET /health responde ok con la versión esperada: fetch failed
+  ... (6 verificaciones fallaron)
+##[error]PowerShell exited with code '1'.
+```
+
+El primer despliegue a DEV (build #35 en `main`) había funcionado.
+
+### Diagnóstico
+
+1. El log del ambiente (`C:\incident-hub-deploy\dev\logs\app.log`) mostraba que la aplicación arrancó y que, pocos segundos después, terminó con `^C` (Ctrl+C).
+2. La diferencia entre el build #35 y el #36 era que el segundo **reemplazaba una versión en ejecución**.
+3. Se reprodujo en local ejecutando `deploy.ps1` dos veces desde consolas separadas, igual que el agente: el primer despliegue sobrevivía y el segundo moría a los pocos segundos.
+
+**Causa:** el proceso nuevo se creaba con WMI sin aislar su consola ni su grupo de procesos, y recibía un Ctrl+C a los pocos segundos de arrancar cuando se reemplazaba una versión en ejecución. La hipótesis de trabajo es que la señal procede del cierre de la consola del proceso anterior (`taskkill /T /F`). Lo demostrado es que el fallo se reproduce solo en el redespliegue y que desaparece al aislar el proceso nuevo (ver Corrección).
+
+**Por qué el control lo detectó:** el health check del propio script pasó (la aplicación estaba viva en ese instante) y fue el **smoke test**, un paso posterior e independiente, el que descubrió la caída. Sin esa segunda verificación el despliegue habría quedado marcado como exitoso con la aplicación caída.
+
+### Corrección
+
+- Rama `fix/AB46-redeploy-sigint`.
+- `deploy.ps1` lanza la aplicación con `CREATE_NO_WINDOW` + `CREATE_NEW_PROCESS_GROUP` (sin ventana y en su propio grupo de procesos) y espera a que el proceso anterior termine antes de arrancar el nuevo.
+- Versión `0.5.1` (PATCH, según SemVer): el tag `v0.5.0` queda tal cual como registro del fallo.
+- Verificación local: tres despliegues consecutivos desde consolas separadas, con la aplicación sana 6 segundos después de cada uno y el smoke test en verde.
