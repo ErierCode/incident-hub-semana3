@@ -2,6 +2,12 @@
 
 Todas las versiones siguen [Semantic Versioning](https://semver.org/lang/es/) y el formato de [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
+## [0.5.1] - 2026-10-25
+
+### Corregido
+- El redespliegue en un ambiente ya no mata la aplicación recién iniciada: se lanza sin consola y en su propio grupo de procesos, y se espera a que termine la versión anterior (AB#46).
+- Documentado el segundo fallo controlado del pipeline (build #36) en docs/evidence.md.
+
 ## [0.5.0] - 2026-10-25
 
 ### Agregado

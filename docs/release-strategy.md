@@ -19,8 +19,8 @@ Secuencia de versiones hasta la primera versión estable:
 | `v0.2.0` | Semana 1 | Asignación, estados, bitácora, comentarios y filtros |
 | `v0.3.0` | Semana 2 | CI en Azure Pipelines (agente self-hosted), GitHub Actions, seguridad, deuda técnica TD-1 y TD-2 |
 | `v0.4.0` | Semana 3 | Dashboard e interfaz web |
-| `v0.5.0` | Semana 3 | Despliegue por ambientes (DEV, QA, PROD), smoke tests y GitHub Release automático |
-| `v1.0.0-rc.1` | Semana 3 | Candidata: recorre DEV → QA → PROD para validar el proceso completo |
+| `v0.5.0` | Semana 3 | Despliegue por ambientes (DEV, QA, PROD), smoke tests y GitHub Release automático. Su despliegue encadenado a DEV falló (build #36, ver evidence.md) |
+| `v0.5.1` | Semana 3 | Corrección del redespliegue (Bug AB#46) |
 | `v1.0.0` | Semana 3 | Primera versión estable |
 
 La versión vive en tres `package.json` (raíz, `backend`, `frontend`) y siempre coincide con el tag. El workflow `release.yml` verifica esa coincidencia antes de publicar.
