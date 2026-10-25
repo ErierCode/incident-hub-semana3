@@ -1,10 +1,11 @@
 {
   "name": "incident-hub",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "description": "IT Incident Hub - gestión de incidentes de TI",
   "workspaces": [
-    "backend"
+    "backend",
+    "frontend"
   ],
   "scripts": {
     "lint": "npm run lint --workspaces --if-present",
