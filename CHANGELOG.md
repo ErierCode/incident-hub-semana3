@@ -6,9 +6,9 @@ Todas las versiones siguen [Semantic Versioning](https://semver.org/lang/es/) y 
 
 ### Agregado
 - Despliegue por ambientes en Azure Pipelines: DEV (automático en main), QA y PROD (solo en tags, con aprobación manual en PROD) (AB#43).
-- : base de datos por ambiente en Docker, migraciones, reemplazo del proceso y verificación de salud (AB#43).
-- Smoke test post-despliegue  (AB#44).
-- Workflow : GitHub Release con el paquete y las notas del CHANGELOG al crear un tag (AB#45).
+- `devops/deploy.ps1`: base de datos por ambiente en Docker, migraciones, reemplazo del proceso y verificación de salud (AB#43).
+- Smoke test post-despliegue `tests/smoke/smoke.js` (AB#44).
+- Workflow `release.yml`: GitHub Release con el paquete y las notas del CHANGELOG al crear un tag (AB#45).
 - Documentación de la estrategia de release (AB#45).
 
 ## [0.4.0] - 2026-10-25
