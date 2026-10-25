@@ -2,6 +2,19 @@
 
 Todas las versiones siguen [Semantic Versioning](https://semver.org/lang/es/) y el formato de [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
+## [1.0.0] - 2026-10-25
+
+Primera versión estable. Recorre DEV, QA y PROD con aprobación manual.
+
+### Agregado
+- Guía de la demostración (docs/demo.md) y correspondencia con el enunciado (docs/cumplimiento.md), con las limitaciones declaradas.
+- Documentación de arquitectura con la topología de despliegue y README completo.
+
+### Resumen de la versión
+- Incidentes con asignación, estados, bitácora, filtros y dashboard (API REST + interfaz React).
+- CI/CD: Azure Pipelines en agente self-hosted, GitHub Actions, despliegue por ambientes y GitHub Release automático.
+- Calidad y seguridad: cobertura mínima del 90 %, npm audit, gitleaks, Dependabot y secretos protegidos.
+
 ## [0.5.1] - 2026-10-25
 
 ### Corregido
