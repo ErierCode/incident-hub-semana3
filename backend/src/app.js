@@ -2,6 +2,8 @@ const express = require('express');
 const { version } = require('../package.json');
 const { createIncidentService } = require('./services/incidentService');
 const { createTechnicianService } = require('./services/technicianService');
+const { createDashboardService } = require('./services/dashboardService');
+const { createDashboardRouter } = require('./routes/dashboard');
 const { createIncidentsRouter } = require('./routes/incidents');
 const { createTechniciansRouter } = require('./routes/technicians');
 
@@ -19,6 +21,7 @@ function createApp({ db }) {
 
   app.use('/api/incidents', createIncidentsRouter({ incidents }));
   app.use('/api/technicians', createTechniciansRouter({ technicians }));
+  app.use('/api/dashboard', createDashboardRouter({ dashboard: createDashboardService(db) }));
 
   app.use((_req, res) => {
     res.status(404).json({ error: 'Recurso no encontrado' });
