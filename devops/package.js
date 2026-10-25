@@ -14,7 +14,11 @@ const INCLUDE = [
   'database',
   'backend/package.json',
   'backend/src',
+  'frontend/package.json',
   'frontend/dist',
+  'devops/deploy.ps1',
+  'devops/docker-compose.deploy.yml',
+  'tests/smoke',
 ];
 
 fs.rmSync(path.join(ROOT, 'dist'), { recursive: true, force: true });

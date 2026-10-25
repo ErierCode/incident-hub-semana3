@@ -1,0 +1,23 @@
+# Base de datos de un ambiente (dev / qa / prod). Se usa con un nombre de proyecto por ambiente:
+#   docker compose -p ih-dev -f devops/docker-compose.deploy.yml up -d --wait
+# Cada proyecto tiene su propio contenedor y su propio volumen, por lo que los ambientes no comparten datos.
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-incident_hub}
+      POSTGRES_USER: ${DB_USER:-incident}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD es obligatoria}
+    ports:
+      - "${DB_PORT:?DB_PORT es obligatorio}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+volumes:
+  pgdata:
