@@ -100,3 +100,40 @@ stages:
             inputs:
               targetPath: $(Build.ArtifactStagingDirectory)
               artifact: incident-hub
+
+  # Estrategia de release (ver docs/release-strategy.md):
+  #   push a main   -> CI + despliegue automático en DEV
+  #   tag vX.Y.Z    -> CI -> DEV -> QA (smoke test) -> PROD (aprobación manual en el Environment)
+  # Los PR solo ejecutan la etapa CI.
+  - template: devops/templates/deploy-stage.yml
+    parameters:
+      stageName: Deploy_DEV
+      displayName: Desplegar en DEV
+      environment: dev
+      port: 3001
+      dbPort: 5441
+      passwordVariable: DB_PASSWORD_DEV
+      dependsOn: CI
+      condition: and(succeeded('CI'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/tags/v')))
+
+  - template: devops/templates/deploy-stage.yml
+    parameters:
+      stageName: Deploy_QA
+      displayName: Desplegar en QA
+      environment: qa
+      port: 3002
+      dbPort: 5442
+      passwordVariable: DB_PASSWORD_QA
+      dependsOn: Deploy_DEV
+      condition: and(succeeded('Deploy_DEV'), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+
+  - template: devops/templates/deploy-stage.yml
+    parameters:
+      stageName: Deploy_PROD
+      displayName: Desplegar en PROD (requiere aprobación)
+      environment: prod
+      port: 3003
+      dbPort: 5443
+      passwordVariable: DB_PASSWORD_PROD
+      dependsOn: Deploy_QA
+      condition: and(succeeded('Deploy_QA'), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))

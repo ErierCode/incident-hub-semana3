@@ -68,6 +68,7 @@ docs/        arquitectura, ramas y demás documentación
 - [Deuda técnica](docs/tech-debt.md)
 - [Seguridad y secretos](docs/security.md)
 - [Análisis de dependencias](docs/dependencies.md)
+- [Estrategia de release](docs/release-strategy.md)
 - [Evidencias DevOps](docs/evidence.md)
 
 ## CI/CD
