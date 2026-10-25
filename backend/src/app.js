@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const { version } = require('../package.json');
 const { createIncidentService } = require('./services/incidentService');
@@ -7,7 +8,7 @@ const { createDashboardRouter } = require('./routes/dashboard');
 const { createIncidentsRouter } = require('./routes/incidents');
 const { createTechniciansRouter } = require('./routes/technicians');
 
-function createApp({ db }) {
+function createApp({ db, staticDir }) {
   const app = express();
   app.use(express.json());
 
@@ -22,6 +23,14 @@ function createApp({ db }) {
   app.use('/api/incidents', createIncidentsRouter({ incidents }));
   app.use('/api/technicians', createTechniciansRouter({ technicians }));
   app.use('/api/dashboard', createDashboardRouter({ dashboard: createDashboardService(db) }));
+
+  // Interfaz web compilada (frontend/dist): archivos estáticos y fallback a index.html para rutas del cliente.
+  if (staticDir) {
+    app.use(express.static(staticDir));
+    app.get(/^\/(?!api\/|health$).*/, (_req, res) => {
+      res.sendFile(path.join(staticDir, 'index.html'));
+    });
+  }
 
   app.use((_req, res) => {
     res.status(404).json({ error: 'Recurso no encontrado' });

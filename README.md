@@ -23,6 +23,7 @@ npm install
 docker compose up -d        # PostgreSQL 16
 npm run migrate             # esquema + datos iniciales
 npm run dev:api             # API en http://localhost:3000
+npm run dev -w frontend     # interfaz en http://localhost:5173 (proxy a la API)
 ```
 
 Verificar: `curl http://localhost:3000/health`
@@ -40,6 +41,7 @@ Verificar: `curl http://localhost:3000/health`
 | GET | `/api/incidents/:id/comments` | Bitácora (comentarios + eventos del sistema) |
 | POST | `/api/incidents/:id/comments` | Agrega comentario `{ author, message }` |
 | GET | `/api/technicians` | Técnicos disponibles |
+| GET | `/api/dashboard` | Indicadores: abiertos, cerrados, críticos, por categoría y por técnico |
 
 ## Pruebas
 
@@ -54,6 +56,7 @@ Las pruebas usan un PostgreSQL en memoria (pg-mem), no necesitan Docker.
 
 ```
 backend/     API REST (Express)
+frontend/    interfaz web (React + Vite)
 database/    migraciones SQL y seed
 docs/        arquitectura, ramas y demás documentación
 ```
