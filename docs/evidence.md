@@ -107,3 +107,15 @@ El primer despliegue a DEV (build #35 en `main`) había funcionado.
 - `deploy.ps1` lanza la aplicación con `CREATE_NO_WINDOW` + `CREATE_NEW_PROCESS_GROUP` (sin ventana y en su propio grupo de procesos) y espera a que el proceso anterior termine antes de arrancar el nuevo.
 - Versión `0.5.1` (PATCH, según SemVer): el tag `v0.5.0` queda tal cual como registro del fallo.
 - Verificación local: tres despliegues consecutivos desde consolas separadas, con la aplicación sana 6 segundos después de cada uno y el smoke test en verde.
+
+### La corrección no surtió efecto: build #38 (Bug AB#47)
+
+Tras mergear la corrección a `main`, el [build #38](https://dev.azure.com/epur/proyectoFinal/_build/results?buildId=38) (versión 0.5.1) volvió a fallar en el mismo paso, con el mismo síntoma.
+
+**Diagnóstico:** el log del paso *Expandir paquete* decía `Paquete incident-hub-0.5.0.zip expandido` y el del despliegue `Desplegando v0.5.0`, aunque el build era el 0.5.1. El workspace del agente self-hosted se reutiliza entre ejecuciones y conserva los paquetes descargados antes; el paso tomaba el primer `.zip` de la carpeta (orden alfabético), es decir, la versión **anterior**. Se redesplegó el paquete viejo, con el `deploy.ps1` viejo, y reapareció el defecto AB#46. El defecto de AB#47 ya existía, pero no se veía porque hasta entonces las dos ejecuciones desplegaban la misma versión.
+
+**Lección:** el smoke test comprueba la versión esperada, pero el propio paquete desplegado era la fuente de esa "versión esperada". Conviene, además, que el log deje a la vista qué paquete se despliega.
+
+**Corrección** (rama `fix/AB47-stale-artifact`, sin cambio de versión porque la 0.5.1 aún no se había publicado):
+- Nuevo paso *Limpiar descargas anteriores* antes de descargar el artefacto.
+- El paso *Expandir paquete* elige el `.zip` de **mayor versión** (comparación numérica: `0.10.0` > `0.9.9`; los sufijos `-rc.N` se ignoran para ordenar), por si quedara más de uno.

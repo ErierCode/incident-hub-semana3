@@ -33,12 +33,21 @@ stages:
           runOnce:
             deploy:
               steps:
+                # El workspace del agente self-hosted se reutiliza entre ejecuciones y conserva los paquetes
+                # anteriores: se limpia antes de descargar para no desplegar una versión vieja por error.
+                - powershell: |
+                    Remove-Item "$(Pipeline.Workspace)\incident-hub" -Recurse -Force -ErrorAction SilentlyContinue
+                  displayName: Limpiar descargas anteriores
+
                 - download: current
                   artifact: incident-hub
                   displayName: Descargar artefacto
 
                 - powershell: |
-                    $zip = Get-ChildItem "$(Pipeline.Workspace)\incident-hub\incident-hub-*.zip" | Select-Object -First 1
+                    # Se elige el paquete de mayor versión (por si quedara más de uno en la carpeta).
+                    $zip = Get-ChildItem "$(Pipeline.Workspace)\incident-hub\incident-hub-*.zip" |
+                      Sort-Object { [version](($_.BaseName -replace '^incident-hub-', '') -replace '-.*$', '') } -Descending |
+                      Select-Object -First 1
                     if (-not $zip) { throw 'El artefacto no contiene el paquete incident-hub-<versión>.zip' }
                     $releases = "C:\incident-hub-deploy\${{ parameters.environment }}\releases"
                     $dir = Join-Path $releases "$(Build.BuildId)"

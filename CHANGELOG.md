@@ -6,7 +6,8 @@ Todas las versiones siguen [Semantic Versioning](https://semver.org/lang/es/) y 
 
 ### Corregido
 - El redespliegue en un ambiente ya no mata la aplicación recién iniciada: se lanza sin consola y en su propio grupo de procesos, y se espera a que termine la versión anterior (AB#46).
-- Documentado el segundo fallo controlado del pipeline (build #36) en docs/evidence.md.
+- El despliegue ya no toma un paquete antiguo de la carpeta de descargas del agente: se limpia antes de descargar y se elige el zip de mayor versión (AB#47).
+- Documentados los fallos del pipeline de la semana 3 (builds #36 y #38) en docs/evidence.md.
 
 ## [0.5.0] - 2026-10-25
 
