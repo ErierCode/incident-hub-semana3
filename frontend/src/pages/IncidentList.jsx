@@ -64,7 +64,8 @@ export default function IncidentList({ onOpen, onNew }) {
       ) : incidents.length === 0 ? (
         <p className="empty">No hay incidentes con estos filtros.</p>
       ) : (
-        <table className="card table">
+        <div className="table-wrap">
+        <table className="table">
           <thead>
             <tr>
               <th>#</th>
@@ -94,6 +95,7 @@ export default function IncidentList({ onOpen, onNew }) {
             ))}
           </tbody>
         </table>
+        </div>
       )}
     </div>
   );

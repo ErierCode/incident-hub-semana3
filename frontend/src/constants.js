@@ -14,7 +14,14 @@ export const NEXT_STATUS = {
 
 export const CAN_ASSIGN = ['NUEVO', 'ASIGNADO', 'EN_PROCESO'];
 
-export const label = (value) => value.replace('_', ' ');
+// Los valores del dominio viajan en mayúsculas; en pantalla se muestran en formato de oración ("En proceso").
+const DISPLAY = { CRITICA: 'Crítica', EN_PROCESO: 'En proceso' };
+export const label = (value) => DISPLAY[value] || value.charAt(0) + value.slice(1).toLowerCase();
+
+// La bitácora automática la redacta el backend con los valores del dominio ("de ASIGNADO a EN_PROCESO");
+// en pantalla se muestran con el mismo formato de oración que el resto de la interfaz.
+export const humanizeMessage = (text) =>
+  text.replace(/\b(NUEVO|ASIGNADO|EN_PROCESO|RESUELTO|CERRADO)\b/g, (status) => label(status));
 
 export const formatDate = (iso) =>
   new Date(iso).toLocaleString('es-GT', { dateStyle: 'short', timeStyle: 'short' });

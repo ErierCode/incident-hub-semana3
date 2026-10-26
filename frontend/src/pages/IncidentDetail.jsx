@@ -1,7 +1,17 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api } from '../api/client.js';
-import { CAN_ASSIGN, NEXT_STATUS, formatDate, label } from '../constants.js';
+import { CAN_ASSIGN, NEXT_STATUS, formatDate, humanizeMessage, label } from '../constants.js';
+import Avatar from '../components/Avatar.jsx';
 import Badge from '../components/Badge.jsx';
+
+function Field({ name, children }) {
+  return (
+    <div>
+      <div className="field-label">{name}</div>
+      <div className="field-value">{children}</div>
+    </div>
+  );
+}
 
 export default function IncidentDetail({ id, user, onBack }) {
   const [incident, setIncident] = useState(null);
@@ -50,20 +60,39 @@ export default function IncidentDetail({ id, user, onBack }) {
   return (
     <div>
       <button type="button" className="link" onClick={onBack}>← Volver al listado</button>
+
       <section className="card detail">
-        <header>
-          <h2>#{incident.id} · {incident.title}</h2>
-          <div>
-            <Badge kind="priority" value={incident.priority} /> <Badge kind="status" value={incident.status} />
-          </div>
-        </header>
-        <p>{incident.description}</p>
-        <dl>
-          <dt>Categoría</dt><dd>{label(incident.category)}</dd>
-          <dt>Reportado por</dt><dd>{incident.reported_by}</dd>
-          <dt>Fecha</dt><dd>{formatDate(incident.created_at)}</dd>
-          <dt>Técnico</dt><dd>{incident.technician_name || 'Sin asignar'}</dd>
-        </dl>
+        <div className="wi-title">
+          <h2>
+            <span className="wi-id">#{incident.id}</span> {incident.title}
+          </h2>
+        </div>
+        <div className="wi-meta">
+          <Badge kind="status" value={incident.status} />
+          <Badge kind="priority" value={incident.priority} />
+        </div>
+
+        <div className="wi-grid">
+          <Field name="Asignado a">
+            {incident.technician_name ? (
+              <>
+                <Avatar name={incident.technician_name} small />
+                {incident.technician_name}
+              </>
+            ) : (
+              'Sin asignar'
+            )}
+          </Field>
+          <Field name="Categoría">{label(incident.category)}</Field>
+          <Field name="Reportado por">
+            <Avatar name={incident.reported_by} small />
+            {incident.reported_by}
+          </Field>
+          <Field name="Fecha de creación">{formatDate(incident.created_at)}</Field>
+        </div>
+
+        <h3>Descripción</h3>
+        <p className="description">{incident.description}</p>
 
         {error && <p role="alert" className="error">{error}</p>}
 
@@ -99,19 +128,25 @@ export default function IncidentDetail({ id, user, onBack }) {
       </section>
 
       <section className="card">
-        <h3>Bitácora</h3>
+        <h3>Discusión</h3>
         <ul className="log">
           {comments.map((entry) => (
             <li key={entry.id} className={entry.type === 'SISTEMA' ? 'system' : ''}>
-              <span className="log-meta">{formatDate(entry.created_at)} · {entry.author}</span>
-              <span>{entry.message}</span>
+              <Avatar name={entry.author} />
+              <div>
+                <div className="log-head">
+                  <span className="log-author">{entry.author}</span>
+                  <span className="log-meta">{formatDate(entry.created_at)}</span>
+                </div>
+                <div className="log-text">{humanizeMessage(entry.message)}</div>
+              </div>
             </li>
           ))}
         </ul>
         <form className="comment-form" onSubmit={addComment}>
           <input
             aria-label="Comentario"
-            placeholder="Escribir un comentario…"
+            placeholder="Agregar un comentario…"
             value={message}
             onChange={(event) => setMessage(event.target.value)}
           />
