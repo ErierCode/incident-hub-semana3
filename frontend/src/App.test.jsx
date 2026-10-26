@@ -64,7 +64,8 @@ describe('IT Incident Hub', () => {
     expect(screen.getByText('Por estado')).toBeInTheDocument();
     expect(screen.getByText('Sin asignar')).toBeInTheDocument();
     expect(screen.getByText('Ana López')).toBeInTheDocument();
-    expect(screen.getByText('RED')).toBeInTheDocument();
+    expect(screen.getByText('Red')).toBeInTheDocument();
+    expect(screen.getByText('En proceso')).toBeInTheDocument();
   });
 
   it('muestra un error si la API del dashboard falla', async () => {
@@ -119,7 +120,7 @@ describe('IT Incident Hub', () => {
     await user.type(screen.getByLabelText('Reportado por'), 'Pedro Ruiz');
     await user.click(screen.getByRole('button', { name: 'Registrar incidente' }));
 
-    expect(await screen.findByText(/#7 · Sin acceso a la VPN/)).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /#7 Sin acceso a la VPN/ })).toBeInTheDocument();
     expect(calls.find((c) => c.method === 'POST').body).toMatchObject({
       title: 'Sin acceso a la VPN',
       category: 'HARDWARE',
@@ -160,7 +161,7 @@ describe('IT Incident Hub', () => {
     await user.click(screen.getByRole('button', { name: 'Asignar' }));
 
     expect(await screen.findByText('Asignado a Ana López')).toBeInTheDocument();
-    expect(await screen.findByRole('button', { name: 'Pasar a EN PROCESO' })).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: 'Pasar a En proceso' })).toBeInTheDocument();
     expect(calls.find((c) => c.method === 'PATCH').body).toEqual({ technicianId: 1, changedBy: 'Erick' });
 
     await user.type(screen.getByLabelText('Comentario'), 'Revisando credenciales');
@@ -184,7 +185,7 @@ describe('IT Incident Hub', () => {
 
     await user.click(screen.getByRole('button', { name: 'Incidentes' }));
     await user.click(await screen.findByRole('button', { name: 'Sin acceso a la VPN' }));
-    await user.click(await screen.findByRole('button', { name: 'Pasar a EN PROCESO' }));
+    await user.click(await screen.findByRole('button', { name: 'Pasar a En proceso' }));
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Transición no permitida');
   });
