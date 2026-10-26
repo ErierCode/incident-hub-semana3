@@ -12,6 +12,8 @@ Solución web para registrar, operar y dar seguimiento a incidentes de TI. Susti
 
 ![Listado de incidentes](docs/img/listado-incidentes.png)
 
+![Detalle de un incidente](docs/img/detalle-incidente.png)
+
 ## Funcionalidad
 
 - **Incidentes:** crear y consultar con título, descripción, categoría, prioridad, usuario, fecha y estado.
