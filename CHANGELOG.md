@@ -2,7 +2,7 @@
 
 Todas las versiones siguen [Semantic Versioning](https://semver.org/lang/es/) y el formato de [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
-## [Sin publicar]
+## [1.1.0] - 2026-10-25
 
 ### Cambiado
 - Rediseño visual de la interfaz con el lenguaje de Azure DevOps: cabecera clara con migas de pan, navegación lateral gris claro, contenido blanco, azul `#0078D4`, tipografía Segoe UI, mosaicos de color en el resumen, estados y prioridades con punto de color como en Boards, textos en formato de oración, detalle con campos en cuadrícula y bitácora como *Discusión* con avatares. Modo oscuro y diseño adaptable a móvil. Sin cambios en la API (AB#48, AB#49).

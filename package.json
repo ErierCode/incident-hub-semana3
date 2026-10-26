@@ -1,6 +1,6 @@
 {
   "name": "incident-hub",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "IT Incident Hub - gestión de incidentes de TI",
   "workspaces": [

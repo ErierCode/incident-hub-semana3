@@ -22,6 +22,7 @@ Secuencia de versiones hasta la primera versión estable:
 | `v0.5.0` | Semana 3 | Despliegue por ambientes (DEV, QA, PROD), smoke tests y GitHub Release automático. Su despliegue encadenado a DEV falló (build #36, ver evidence.md) |
 | `v0.5.1` | Semana 3 | Corrección del redespliegue (Bug AB#46) |
 | `v1.0.0` | Semana 3 | Primera versión estable |
+| `v1.1.0` | Semana 3 | Rediseño visual de la interfaz (lenguaje de Azure DevOps), tasa de resolución y distribución por estado |
 
 La versión vive en tres `package.json` (raíz, `backend`, `frontend`) y siempre coincide con el tag. El workflow `release.yml` verifica esa coincidencia antes de publicar.
 
