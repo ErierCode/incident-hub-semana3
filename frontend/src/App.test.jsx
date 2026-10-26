@@ -56,7 +56,12 @@ describe('IT Incident Hub', () => {
     render(<App />);
 
     expect(await screen.findByText('Abiertos')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: 'Resumen ejecutivo' })).toBeInTheDocument();
     expect(screen.getByText('Críticos abiertos')).toBeInTheDocument();
+    expect(screen.getByText('requieren atención inmediata')).toBeInTheDocument();
+    expect(screen.getByText('40 %')).toBeInTheDocument();
+    expect(screen.getByText('2 de 5 cerrados')).toBeInTheDocument();
+    expect(screen.getByText('Por estado')).toBeInTheDocument();
     expect(screen.getByText('Sin asignar')).toBeInTheDocument();
     expect(screen.getByText('Ana López')).toBeInTheDocument();
     expect(screen.getByText('RED')).toBeInTheDocument();

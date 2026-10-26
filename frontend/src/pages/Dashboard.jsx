@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api/client.js';
-import { label } from '../constants.js';
+import { STATUSES, label } from '../constants.js';
 
-function Stat({ title, value, tone }) {
+function Stat({ title, value, note, tone, alert = false }) {
   return (
     <div className={`stat stat-${tone}`}>
-      <span className="stat-value">{value}</span>
       <span className="stat-title">{title}</span>
+      <span className={`stat-value${alert ? ' alert' : ''}`}>{value}</span>
+      <span className="stat-note">{note}</span>
     </div>
   );
 }
@@ -42,15 +43,28 @@ export default function Dashboard() {
   if (error) return <p role="alert" className="error">{error}</p>;
   if (!data) return <p>Cargando indicadores…</p>;
 
+  const rate = data.total === 0 ? 0 : Math.round((data.closed / data.total) * 100);
+
   return (
     <div>
       <div className="stats">
-        <Stat title="Abiertos" value={data.open} tone="open" />
-        <Stat title="Cerrados" value={data.closed} tone="closed" />
-        <Stat title="Críticos abiertos" value={data.critical} tone="critical" />
-        <Stat title="Total" value={data.total} tone="total" />
+        <Stat title="Abiertos" value={data.open} note={`de ${data.total} incidentes registrados`} tone="open" />
+        <Stat
+          title="Críticos abiertos"
+          value={data.critical}
+          note={data.critical > 0 ? 'requieren atención inmediata' : 'sin incidentes críticos'}
+          tone="critical"
+          alert={data.critical > 0}
+        />
+        <Stat title="Cerrados" value={data.closed} note="incidentes resueltos y cerrados" tone="closed" />
+        <Stat title="Tasa de resolución" value={`${rate} %`} note={`${data.closed} de ${data.total} cerrados`} tone="rate" />
       </div>
-      <div className="grid-2">
+
+      <div className="grid-3">
+        <Bars
+          title="Por estado"
+          rows={STATUSES.map((status) => ({ name: label(status), total: data.byStatus[status] || 0 }))}
+        />
         <Bars
           title="Por categoría"
           rows={data.byCategory.map((row) => ({ name: label(row.category), total: row.total }))}
