@@ -5,7 +5,8 @@ Todas las versiones siguen [Semantic Versioning](https://semver.org/lang/es/) y 
 ## [Sin publicar]
 
 ### Cambiado
-- Rediseño visual ejecutivo de la interfaz: barra lateral azul marino con acento latón, tipografía con serif en títulos y cifras, tarjetas de indicadores con contexto, nueva métrica de tasa de resolución, distribución por estado, tablas densas y estados en colores contenidos (burdeos solo para lo crítico). Modo oscuro y diseño adaptable a móvil. Sin cambios en la API (AB#48).
+- Rediseño visual de la interfaz con el lenguaje de Azure DevOps: cabecera clara con migas de pan, navegación lateral gris claro, contenido blanco, azul `#0078D4`, tipografía Segoe UI, mosaicos de color en el resumen, estados y prioridades con punto de color como en Boards, textos en formato de oración, detalle con campos en cuadrícula y bitácora como *Discusión* con avatares. Modo oscuro y diseño adaptable a móvil. Sin cambios en la API (AB#48, AB#49).
+- Nuevas métricas en el resumen: tasa de resolución y distribución por estado (AB#48).
 
 ## [1.0.0] - 2026-10-25
 

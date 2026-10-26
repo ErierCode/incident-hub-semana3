@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { api } from '../api/client.js';
-import { CATEGORIES, PRIORITIES } from '../constants.js';
+import { CATEGORIES, PRIORITIES, label } from '../constants.js';
 
 const EMPTY = { title: '', description: '', category: 'HARDWARE', priority: 'MEDIA', reportedBy: '' };
 
@@ -44,7 +44,7 @@ export default function IncidentForm({ user, onCreated, onCancel }) {
           Categoría
           <select value={form.category} onChange={update('category')}>
             {CATEGORIES.map((c) => (
-              <option key={c}>{c}</option>
+              <option key={c} value={c}>{label(c)}</option>
             ))}
           </select>
         </label>
@@ -52,7 +52,7 @@ export default function IncidentForm({ user, onCreated, onCancel }) {
           Prioridad
           <select value={form.priority} onChange={update('priority')}>
             {PRIORITIES.map((p) => (
-              <option key={p}>{p}</option>
+              <option key={p} value={p}>{label(p)}</option>
             ))}
           </select>
         </label>
