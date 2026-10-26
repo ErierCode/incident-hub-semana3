@@ -8,6 +8,10 @@ Solución web para registrar, operar y dar seguimiento a incidentes de TI. Susti
 | **Azure DevOps** | https://dev.azure.com/epur/proyectoFinal |
 | **Repositorios** | [semana 1](https://github.com/ErierCode/incident-hub-semana1) · [semana 2](https://github.com/ErierCode/incident-hub-semana2) · [semana 3 (final)](https://github.com/ErierCode/incident-hub-semana3) |
 
+![Resumen ejecutivo](docs/img/resumen-ejecutivo.png)
+
+![Listado de incidentes](docs/img/listado-incidentes.png)
+
 ## Funcionalidad
 
 - **Incidentes:** crear y consultar con título, descripción, categoría, prioridad, usuario, fecha y estado.

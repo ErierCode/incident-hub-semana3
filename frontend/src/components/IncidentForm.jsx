@@ -31,7 +31,6 @@ export default function IncidentForm({ user, onCreated, onCancel }) {
 
   return (
     <form className="card form" onSubmit={submit} aria-label="Nuevo incidente">
-      <h2>Nuevo incidente</h2>
       <label>
         Título
         <input value={form.title} onChange={update('title')} maxLength={200} />
