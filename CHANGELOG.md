@@ -2,6 +2,11 @@
 
 Todas las versiones siguen [Semantic Versioning](https://semver.org/lang/es/) y el formato de [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
+## [Sin publicar]
+
+### Cambiado
+- Rediseño visual ejecutivo de la interfaz: barra lateral azul marino con acento latón, tipografía con serif en títulos y cifras, tarjetas de indicadores con contexto, nueva métrica de tasa de resolución, distribución por estado, tablas densas y estados en colores contenidos (burdeos solo para lo crítico). Modo oscuro y diseño adaptable a móvil. Sin cambios en la API (AB#48).
+
 ## [1.0.0] - 2026-10-25
 
 Primera versión estable. Recorre DEV, QA y PROD con aprobación manual.
