@@ -4,7 +4,7 @@ Solución web para registrar, operar y dar seguimiento a incidentes de TI. Susti
 
 | | |
 |---|---|
-| **Versión** | 1.0.0 ([CHANGELOG](CHANGELOG.md)) |
+| **Versión** | 1.1.0 ([CHANGELOG](CHANGELOG.md)) |
 | **Azure DevOps** | https://dev.azure.com/epur/proyectoFinal |
 | **Repositorios** | [semana 1](https://github.com/ErierCode/incident-hub-semana1) · [semana 2](https://github.com/ErierCode/incident-hub-semana2) · [semana 3 (final)](https://github.com/ErierCode/incident-hub-semana3) |
 
