@@ -130,13 +130,14 @@ Con las dos correcciones, los redespliegues sobre ambientes ya existentes funcio
 | Tag [`v0.5.1`](https://github.com/ErierCode/incident-hub-semana3/releases/tag/v0.5.1) | #41 | DEV → QA → **aprobación manual** → PROD en verde | Primera promoción completa entre los tres ambientes |
 | Push a `main` (`chore(release)`, versión 1.0.0) | #43 | DEV en verde | Tercer redespliegue consecutivo sobre DEV sin caídas |
 | Tag [`v1.0.0`](https://github.com/ErierCode/incident-hub-semana3/releases/tag/v1.0.0) | [#44](https://dev.azure.com/epur/proyectoFinal/_build/results?buildId=44) | DEV → QA → **aprobación manual** → PROD en verde | Release estable; GitHub Release con `incident-hub-1.0.0.zip` |
+| Tag [`v1.1.0`](https://github.com/ErierCode/incident-hub-semana3/releases/tag/v1.1.0) | [#53](https://dev.azure.com/epur/proyectoFinal/_build/results?buildId=53) | DEV → QA → **aprobación manual** → PROD en verde | Promoción a PROD del rediseño visual: los tres ambientes sirven el mismo archivo de estilos (`index-CLypDJPb.css`), es decir, el mismo artefacto |
 
-Verificación posterior del estado de los ambientes (`GET /health`):
+Verificación posterior del estado de los ambientes (`GET /health`), tras publicar `v1.1.0`:
 
 ```
-http://localhost:3001  {"status":"ok","version":"1.0.0","db":"up"}   # DEV
-http://localhost:3002  {"status":"ok","version":"1.0.0","db":"up"}   # QA
-http://localhost:3003  {"status":"ok","version":"1.0.0","db":"up"}   # PROD
+http://localhost:3001  {"status":"ok","version":"1.1.0","db":"up"}   # DEV
+http://localhost:3002  {"status":"ok","version":"1.1.0","db":"up"}   # QA
+http://localhost:3003  {"status":"ok","version":"1.1.0","db":"up"}   # PROD
 ```
 
 Cada ambiente usa su propio proyecto Docker (`ih-dev`, `ih-qa`, `ih-prod`) y su propio puerto de PostgreSQL (5441, 5442, 5443).
